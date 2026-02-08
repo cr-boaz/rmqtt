@@ -33,6 +33,7 @@ pub mod v5;
 
 /// Protocol version detection and negotiation
 pub mod version;
+pub mod mtls;
 
 /// Main MQTT protocol codec implementation
 ///

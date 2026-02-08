@@ -26,7 +26,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio::sync::{oneshot, RwLock};
-
+use rmqtt_codec::mtls::CertInfo;
 use crate::acl::AuthInfo;
 use crate::codec::types::MQTT_LEVEL_5;
 use crate::codec::v3::{
@@ -327,6 +327,18 @@ impl ConnectInfo {
             connect.auth_method.as_ref()
         } else {
             None
+        }
+    }
+
+    #[inline]
+    pub fn cert(&self) -> Option<&CertInfo> {
+        match self {
+            ConnectInfo::V3(_, connect) => {
+                connect.cert.as_ref()
+            }
+            ConnectInfo::V5(_, connect) => {
+                connect.cert.as_ref()
+            }
         }
     }
 }

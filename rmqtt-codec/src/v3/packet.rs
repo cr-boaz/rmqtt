@@ -3,7 +3,7 @@ use std::num::NonZeroU16;
 use bytes::Bytes;
 use bytestring::ByteString;
 use serde::{Deserialize, Serialize};
-
+use crate::mtls::CertInfo;
 use crate::types::{packet_type, Protocol, QoS};
 
 prim_enum! {
@@ -87,6 +87,8 @@ pub struct Connect {
     pub username: Option<ByteString>,
     /// password can be used by the Server for authentication and authorization.
     pub password: Option<Bytes>,
+    /// certificate information
+    pub cert: Option<CertInfo>,
 }
 
 impl Connect {

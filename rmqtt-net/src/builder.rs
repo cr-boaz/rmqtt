@@ -61,15 +61,15 @@ use tokio_tungstenite::{
     accept_hdr_async,
     tungstenite::handshake::server::{ErrorResponse, Request, Response},
 };
-
+use rmqtt_codec::mtls::CertInfo;
 #[cfg(feature = "quic")]
 use crate::quic::QuinnBiStream;
 use crate::stream::Dispatcher;
 #[cfg(feature = "ws")]
 use crate::ws::WsStream;
 #[cfg(feature = "tls")]
-use crate::{CertInfo, TlsCertExtractor};
 use crate::{Error, Result};
+use crate::TlsCertExtractor;
 
 /// Configuration builder for MQTT server instances
 #[derive(Clone, Debug)]
@@ -155,6 +155,9 @@ pub struct Builder {
     /// Use TLS Certificate CN as Username
     pub cert_cn_as_username: bool,
 
+    /// Collect TLS Certificate information
+    pub collect_cert_info: bool,
+    
     /// QUIC(max_idle_timeout)
     pub idle_timeout: Duration,
 }
@@ -222,6 +225,7 @@ impl Builder {
             proxy_protocol_timeout: Duration::from_secs(5),
 
             cert_cn_as_username: false,
+            collect_cert_info: false,
 
             idle_timeout: Duration::from_secs(90),
         }
@@ -439,6 +443,11 @@ impl Builder {
 
     pub fn cert_cn_as_username(mut self, cert_cn_as_username: bool) -> Self {
         self.cert_cn_as_username = cert_cn_as_username;
+        self
+    }
+
+    pub fn collect_cert_info(mut self, collect_cert_info: bool) -> Self {
+        self.collect_cert_info = collect_cert_info;
         self
     }
 
